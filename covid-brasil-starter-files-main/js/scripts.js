@@ -25,19 +25,39 @@ const _data = {
 const _charts = {};
 
 _elements.switch.addEventListener("click", () => {
+    const isDark = _elements.switch.classList.toggle("switch__track--dark")
 
+    if(isDark)
+    document.documentElement.setAttribute("data-theme", "dark")
+    else
+    document.documentElement.setAttribute("data-theme", "light")
 });
 
 _elements.stateSelectToggle.addEventListener("click", () => {
-
+    _elements.selectToggleIcon.classList.toggle("state-select-toggle__icon--rotate")
+    _elements.selectList.classList.toggle("state-select-list--show")
 });
 
 _elements.selectOptions.forEach(item => {
-
+    item.addEventListener("click", () => {
+        _elements.selectStateSelected.innerText  = item.innerText;
+        _data.id = item.getAttribute("data-id");
+        _elements.stateSelectToggle.dispatchEvent(new Event("click"))
+    });
 });
 
 _elements.selectSearchBox.addEventListener("keyup", (e) => {
+    const search = e.target.value.toLowerCase()
 
+    for(const item of _elements.selectOptions) {
+        const state = item.innerText.toLowerCase()
+
+        if(state.includes(search)){
+            item.classList.remove("state-select-list__item--hide")
+        } else {
+            item.classList.add("state-select-list__item--hide")
+        }
+    }
 });
 
 const request = (api, id) => {
